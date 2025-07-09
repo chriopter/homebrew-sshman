@@ -1,0 +1,136 @@
+.\" Manpage for sshman
+.\" Contact christophereller@github.com to correct errors or typos.
+.TH SSHMAN 1 "January 2025" "1.0.0" "SSH Key Manager"
+.SH NAME
+sshman \- SSH Key Manager with cloud sync support for macOS
+.SH SYNOPSIS
+.B sshman
+.SH DESCRIPTION
+.B sshman
+is a simple, interactive SSH key management tool that provides cloud sync support for your SSH identities. It enforces security best practices by requiring all SSH keys to be encrypted with a passphrase and integrates seamlessly with macOS keychain.
+.PP
+The tool provides a menu-driven interface for managing SSH keys, including generation, listing, keychain integration, and server configuration.
+.SH FEATURES
+.TP
+.B Encrypted Keys Only
+All generated keys must have a passphrase. Unencrypted keys cannot be added to the keychain.
+.TP
+.B Cloud Sync Support
+Store your SSH keys in any cloud-synced folder (iCloud Drive, Dropbox, Google Drive, etc.)
+.TP
+.B macOS Keychain Integration
+Add encrypted keys to the macOS keychain using the --apple-use-keychain flag
+.TP
+.B Automatic Configuration
+Manages your ~/.ssh/config file to include cloud-synced configurations
+.TP
+.B Key Fingerprints
+Display SHA256 fingerprints for all keys for easy identification
+.SH MENU OPTIONS
+When you run
+.BR sshman ,
+you'll see an interactive menu with the following options:
+.TP
+.B 1) Install/Update Configuration
+Set up or update your SSH configuration to use a cloud-synced folder. You can choose your sync directory, and the tool will create the necessary folder structure.
+.TP
+.B 2) List Identities
+Display all SSH keys in your sync folder with their encryption status, fingerprints, and comments.
+.TP
+.B 3) Generate New Identity
+Create a new SSH key pair. Supports ed25519 (recommended), RSA, and ECDSA algorithms. Forces passphrase encryption.
+.TP
+.B 4) Add to Keychain
+Add an encrypted SSH key to the macOS keychain for password-free authentication.
+.TP
+.B 5) Link Identity to Server
+Create a Host configuration in your synced SSH config file, linking a specific identity to a server.
+.TP
+.B 6) Exit
+Exit the program.
+.SH FILE STRUCTURE
+.B sshman
+creates the following structure in your chosen sync folder:
+.PP
+.nf
+sync-folder/
+├── config          # Host configurations
+└── Identities/     # SSH key pairs
+    ├── id_ed25519_github
+    ├── id_ed25519_github.pub
+    └── ...
+.fi
+.PP
+Your ~/.ssh/config is updated to include the synced configuration:
+.PP
+.nf
+# SSH Key Manager Configuration
+# This file includes your cloud-synced SSH configuration
+Include ~/Documents/SSH/config
+.fi
+.PP
+The synced config file contains your SSH settings:
+.PP
+.nf
+# Default identity files location
+IdentityFile ~/Documents/SSH/Identities/id_ed25519
+IdentityFile ~/Documents/SSH/Identities/id_rsa
+IdentityFile ~/Documents/SSH/Identities/id_ecdsa
+
+# SSH Agent configuration (macOS)
+AddKeysToAgent yes
+UseKeychain yes
+.fi
+.SH EXAMPLES
+.TP
+.B Initial Setup
+Run sshman and select option 1. Enter your preferred cloud sync folder path when prompted.
+.TP
+.B Generate GitHub Key
+Select option 3, choose ed25519, enter your email as comment, and name it "github". You must set a passphrase.
+.TP
+.B Add to Keychain
+Select option 4 and choose the key you want to add. Only encrypted keys can be added.
+.TP
+.B Link to Server
+Select option 5, enter "github.com" as hostname, optionally set an alias, and select your GitHub key.
+.SH SECURITY
+.IP \(bu 2
+All keys must be encrypted with a passphrase
+.IP \(bu 2
+Existing SSH config is backed up before modifications
+.IP \(bu 2
+Unencrypted keys are rejected during generation
+.IP \(bu 2
+Keys are stored with appropriate permissions (600)
+.SH FILES
+.TP
+.I ~/.ssh/config
+SSH client configuration file, modified to include cloud-synced config
+.TP
+.I ~/Documents/SSH/
+Default suggestion for cloud sync folder (user can choose any location)
+.TP
+.I ~/.ssh/config.backup.*
+Backup files created when updating SSH configuration
+.SH ENVIRONMENT
+.B sshman
+uses standard SSH tools and requires:
+.IP \(bu 2
+macOS (for keychain integration)
+.IP \(bu 2
+ssh-keygen (for key generation)
+.IP \(bu 2
+ssh-add (for keychain management)
+.SH EXIT STATUS
+.B sshman
+exits 0 on success, and >0 if an error occurs.
+.SH SEE ALSO
+.BR ssh (1),
+.BR ssh-keygen (1),
+.BR ssh-add (1),
+.BR ssh_config (5)
+.SH AUTHOR
+Christopher Eller (christophereller@github.com)
+.SH BUGS
+Report bugs at https://github.com/christophereller/homebrew-sshman/issues

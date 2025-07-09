@@ -1,0 +1,122 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install test dependencies
+      run: |
+        brew install bats-core
+        brew install shellcheck
+    
+    - name: Run shellcheck
+      run: |
+        # Skip shellcheck for zsh script, only check bash completion
+        shellcheck sshman-completion.bash
+    
+    - name: Run tests
+      run: bats test/sshman.bats
+
+  check-release:
+    needs: test
+    runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.check.outputs.should_release }}
+      version: ${{ steps.check.outputs.version }}
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Check if release is needed
+      id: check
+      run: |
+        # Get version from script
+        SCRIPT_VERSION=$(grep '^VERSION=' sshman | cut -d'"' -f2)
+        echo "Script version: $SCRIPT_VERSION"
+        
+        # Get latest tag
+        LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+        echo "Latest tag: $LATEST_TAG"
+        
+        # Remove 'v' prefix for comparison
+        TAG_VERSION=${LATEST_TAG#v}
+        
+        if [ "$SCRIPT_VERSION" != "$TAG_VERSION" ]; then
+          echo "should_release=true" >> $GITHUB_OUTPUT
+          echo "version=$SCRIPT_VERSION" >> $GITHUB_OUTPUT
+          echo "New release needed: $SCRIPT_VERSION"
+        else
+          echo "should_release=false" >> $GITHUB_OUTPUT
+          echo "No release needed"
+        fi
+
+  release:
+    needs: check-release
+    if: needs.check-release.outputs.should_release == 'true' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Create Release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        VERSION="${{ needs.check-release.outputs.version }}"
+        TAG="v$VERSION"
+        
+        # Create tag
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git tag -a "$TAG" -m "Release $TAG"
+        git push origin "$TAG"
+        
+        # Create release
+        gh release create "$TAG" \
+          --title "Release $TAG" \
+          --notes "Release version $VERSION" \
+          --target main
+    
+    - name: Update Homebrew Formula
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        VERSION="${{ needs.check-release.outputs.version }}"
+        TAG="v$VERSION"
+        
+        # Wait for release to be available
+        sleep 10
+        
+        # Download the tarball
+        curl -L -o "sshman-$VERSION.tar.gz" \
+          "https://github.com/${{ github.repository }}/archive/refs/tags/$TAG.tar.gz"
+        
+        # Calculate SHA256
+        SHA256=$(shasum -a 256 "sshman-$VERSION.tar.gz" | awk '{print $1}')
+        
+        # Update formula
+        sed -i.bak -E \
+          -e "s|url \".*\"|url \"https://github.com/${{ github.repository }}/archive/refs/tags/$TAG.tar.gz\"|" \
+          -e "s|sha256 \".*\"|sha256 \"$SHA256\"|" \
+          Formula/sshman.rb
+        
+        rm Formula/sshman.rb.bak
+        
+        # Commit and push
+        git add Formula/sshman.rb
+        git commit -m "Update formula for version $VERSION"
+        git push
