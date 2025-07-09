@@ -1,0 +1,80 @@
+# sshman
+
+sshman provides a nice TUI to register and manage a cloud-synced ssh config & all your identities. Use it to keep SSH-Keys and config in sync across multiple Macs.
+
+- ☁️ **Cloud sync** - Config, Authorized Keys and Identities in Syncing Folder of your choice
+- 🔑 **Keychain integration** - Register Identities in iCloud Keychain your passphrase 
+- 🔐 **Forces encryption** - No accidental unencrypted keys
+- 🖥️ **Server management** - Link SSH keys to specific servers with custom aliases
+
+## Quick Start
+
+Install:
+```bash
+brew tap chriopter/sshman
+brew install sshman
+```
+
+## How it Works
+
+Run `sshman` to see:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SSH Key Manager
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1) Install/Update Configuration
+2) List Identities
+3) Generate New Identity
+4) Add to Keychain
+5) Link Identity to Server
+6) Exit
+```
+
+- Install on new Computers to register synced config
+
+Folder structure that is created:
+```
+~/Documents/SSH/          # Or wherever you choose
+├── config               # Host configurations  
+└── Identities/          # Your SSH keys
+    ├── id_ed25519_github
+    └── id_ed25519_work
+```
+
+- Generate new identities directly in sync folder
+- Link to generate entries in config to link identity with hosts
+
+That's it! Your SSH keys now sync across all your Macs automatically. Re-Run Setup on other computers.
+
+
+## Security
+
+- ✅ All keys must have passphrases
+- ✅ Unencrypted keys are rejected
+- ✅ SSH config backups before changes
+- ✅ Keys stored with 600 permissions
+
+## Troubleshooting
+
+**Can't find sync folder?**
+- Check iCloud Drive is accessible by Terminal
+
+**Key not working?**
+- Run `sshman` → 2 to check encryption status
+- Ensure key is added to keychain (option 4)
+
+**Need help?**
+- Open an issue: [github.com/christophereller/homebrew-sshman/issues](https://github.com/christophereller/homebrew-sshman/issues)
+
+## Development
+
+To release: Update VERSION in `sshman` script, commit, and push. CI will auto-update the formula.
+
+Tests run automatically on every push.
+```
+
+## Caution
+
+LLM Code, use with Caution.
