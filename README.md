@@ -15,7 +15,7 @@ brew tap chriopter/sshman
 brew install sshman
 ```
 
-## Menu Options
+## How it Works
 
 Run `sshman` to see:
 
@@ -32,7 +32,7 @@ SSH Key Manager
 6) Exit
 ```
 
-## How It Works
+- Install on new Computers to register synced config
 
 Folder structure that is created:
 ```
@@ -44,7 +44,6 @@ Folder structure that is created:
     └── id_ed25519_work
 ```
 
-- Install on new Computers to register synced config
 - Generate new identities directly in sync folder
 - Link to generate entries in config to link identity with hosts
 
