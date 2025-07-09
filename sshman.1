@@ -55,7 +55,6 @@ creates the following structure in your chosen sync folder:
 .nf
 sync-folder/
 ├── config          # Host configurations
-├── known_hosts     # Known hosts file
 └── Identities/     # SSH key pairs
     ├── id_ed25519_github
     ├── id_ed25519_github.pub
@@ -65,9 +64,20 @@ sync-folder/
 Your ~/.ssh/config is updated to include the synced configuration:
 .PP
 .nf
+# SSH Key Manager Configuration
+# This file includes your cloud-synced SSH configuration
 Include ~/Documents/SSH/config
-UserKnownHostsFile ~/Documents/SSH/known_hosts ~/.ssh/known_hosts
+.fi
+.PP
+The synced config file contains your SSH settings:
+.PP
+.nf
+# Default identity files location
 IdentityFile ~/Documents/SSH/Identities/id_ed25519
+IdentityFile ~/Documents/SSH/Identities/id_rsa
+IdentityFile ~/Documents/SSH/Identities/id_ecdsa
+
+# SSH Agent configuration (macOS)
 AddKeysToAgent yes
 UseKeychain yes
 .fi
