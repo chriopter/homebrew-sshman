@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # SSH Key Manager - Simple SSH key management with cloud sync
-VERSION="1.0.1"
+VERSION="1.0.2"
 
 # Color definitions
 RED='\033[0;31m'
@@ -117,6 +117,8 @@ install_config() {
     # Check if synced config already exists
     if [[ -f "$synced_config" ]]; then
         print_color $YELLOW "⚠️  Found existing synced config"
+        print_color $YELLOW "   Creating a new one will overwrite your existing host entries"
+        print_color $YELLOW "   (Your SSH keys will NOT be affected)"
         echo -n "Use existing config? (recommended for additional Mac) (y/n): "
         read -r response
         if [[ "$response" == "y" || "$response" == "Y" ]]; then
