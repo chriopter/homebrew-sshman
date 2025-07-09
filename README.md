@@ -19,12 +19,18 @@ brew install sshman
 
 Run `sshman` to see:
 
-1. **Install/Update** - Set up or change sync folder
-2. **List Identities** - See all keys with 🔐/🔓 status
-3. **Generate New** - Create encrypted SSH keys
-4. **Add to Keychain** - Store passphrases in iCloud Keychain
-5. **Link to Server** - Configure host shortcuts
-6. **Exit**
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SSH Key Manager
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1) Install/Update Configuration
+2) List Identities
+3) Generate New Identity
+4) Add to Keychain
+5) Link Identity to Server
+6) Exit
+```
 
 ## How It Works
 
