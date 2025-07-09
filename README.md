@@ -38,7 +38,6 @@ Folder structure that is created:
 ```
 ~/Documents/SSH/          # Or wherever you choose
 ├── config               # Host configurations  
-├── known_hosts          # Verified servers
 └── Identities/          # Your SSH keys
     ├── id_ed25519_github
     └── id_ed25519_work
