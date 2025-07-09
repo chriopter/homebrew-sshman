@@ -90,6 +90,13 @@ That's it! Your SSH keys now sync across all your Macs automatically. Re-Run Set
 **Need help?**
 - Open an issue: [github.com/christophereller/homebrew-sshman/issues](https://github.com/christophereller/homebrew-sshman/issues)
 
-## License
+## Development
 
-MIT
+To release: Update VERSION in `sshman` script, commit, and push. CI will auto-update the formula.
+
+Tests run automatically on every push.
+```
+
+## Caution
+
+LLM Code, use with Caution.
