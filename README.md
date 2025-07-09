@@ -44,35 +44,9 @@ Folder structure that is created:
     └── id_ed25519_work
 ```
 
-
-## Examples
-
-Your `~/.ssh/config` includes the synced config automatically.
-
-
-Set up:
-```bash
-sshman
-# Select 1 to configure cloud sync
-```
-
-Generate secure keys:
-```bash
-sshman
-# Select 3: Generate New Identity
-```
-
-Add to Keychain:
-```bash
-sshman
-# Select 4: Add to Keychain
-```
-
-Register a server:
-```bash
-sshman
-# Select 5: Link Identity to Server
-```
+- Install on new Computers to register synced config
+- Generate new identities directly in sync folder
+- Link to generate entries in config to link identity with hosts
 
 That's it! Your SSH keys now sync across all your Macs automatically. Re-Run Setup on other computers.
 
