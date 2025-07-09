@@ -6,6 +6,7 @@ sshman provides a nice TUI to register and manage a cloud-synced ssh config & al
 - 🔑 **Keychain integration** - Save your passphrase in iCloud Keychain 
 - 🔐 **Forces encryption** - No accidental unencrypted keys
 - 🖥️ **Server management** - Link SSH keys to specific servers with custom aliases
+- 🚀 **Smart iCloud handling** - Automatically ensures iCloud directories are accessible
 
 ## Quick Start
 
@@ -86,12 +87,14 @@ That's it! Your SSH keys and host configurations now sync across all your Macs a
 
 ## Troubleshooting
 
-**Can't find sync folder?**
-- Check iCloud Drive is accessible by Terminal
-
 **Key not working?**
 - Run `sshman` → 2 to check encryption status
 - Ensure key is added to keychain (option 4)
+
+**iCloud Drive Access**
+- Terminal apps need special handling to access iCloud directories
+- We use `mkdir -p` to ensure directories are accessible before reading files
+- This happens automatically on startup and when SSH connects (included in local ssh config after set up)
 
 **Need help?**
 - Open an issue: [github.com/christophereller/homebrew-sshman/issues](https://github.com/christophereller/homebrew-sshman/issues)
