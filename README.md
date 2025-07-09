@@ -2,8 +2,8 @@
 
 sshman provides a nice TUI to register and manage a cloud-synced ssh config & all your identities. Use it to keep SSH-Keys and config in sync across multiple Macs.
 
-- ☁️ **Cloud sync** - Config, Authorized Keys and Identities in Syncing Folder of your choice
-- 🔑 **Keychain integration** - Register Identities in iCloud Keychain your passphrase 
+- ☁️ **Cloud sync** - Config and Identities in Syncing Folder of your choice
+- 🔑 **Keychain integration** - Save your passphrase in iCloud Keychain 
 - 🔐 **Forces encryption** - No accidental unencrypted keys
 - 🖥️ **Server management** - Link SSH keys to specific servers with custom aliases
 
@@ -43,10 +43,38 @@ Folder structure that is created:
     └── id_ed25519_work
 ```
 
-- Generate new identities directly in sync folder
-- Link to generate entries in config to link identity with hosts
+## Menu Options Explained
 
-That's it! Your SSH keys now sync across all your Macs automatically. Re-Run Setup on other computers.
+### 1) Install/Update Configuration
+Sets up sshman on your Mac. Creates the sync folder structure and configures your SSH to use the synced configuration. If you already have a sync folder (from another Mac), it will detect and use the existing configuration.
+
+### 2) List Identities
+Shows all SSH keys in your sync folder. Displays whether each key is encrypted (🔐) or not (🔓), along with the key fingerprint and comment. Only encrypted keys are recommended for security.
+
+### 3) Generate New Identity
+Creates a new SSH key pair with your choice of algorithm (ed25519, RSA, or ECDSA). Forces you to set a passphrase for security. The key is saved directly in your sync folder and immediately available on all your Macs.
+
+### 4) Add to Keychain
+Stores your SSH key passphrase in the macOS Keychain. Once added, you won't need to enter the passphrase again - macOS will automatically unlock the key when needed. This uses Apple's secure keychain storage and works across system restarts.
+
+### 5) Link Identity to Server
+Creates convenient SSH host aliases. Instead of typing full connection details every time, you can create shortcuts. When you link an identity to a server, sshman adds a Host entry to your synced config:
+
+```
+Host myserver
+    HostName example.com
+    User alice
+    IdentityFile /path/to/your/key
+    IdentitiesOnly yes
+```
+
+This means:
+- You can connect with just: `ssh myserver` (instead of `ssh alice@example.com`)
+- It automatically uses the correct user and SSH key
+- `IdentitiesOnly yes` ensures only the specified key is tried
+- These host configs sync across all your Macs!
+
+That's it! Your SSH keys and host configurations now sync across all your Macs automatically. Re-Run Setup on other computers.
 
 
 ## Security
