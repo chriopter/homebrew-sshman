@@ -11,7 +11,7 @@ sshman provides a nice TUI to register and manage a cloud-synced ssh config & al
 
 Install:
 ```bash
-brew tap c/sshman
+brew tap chriopter/sshman
 brew install sshman
 ```
 
