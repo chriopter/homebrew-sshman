@@ -55,7 +55,7 @@ Shows all SSH keys in your sync folder. Displays whether each key is encrypted (
 Creates a new SSH key pair with your choice of algorithm (ed25519, RSA, or ECDSA). Forces you to set a passphrase for security. The key is saved directly in your sync folder and immediately available on all your Macs.
 
 ### 4) Add to Keychain
-Stores your SSH key passphrase in the macOS Keychain. Once added, you won't need to enter the passphrase again - macOS will automatically unlock the key when needed. This uses Apple's secure keychain storage and works across system restarts.
+Stores your SSH key passphrase in the macOS Keychain. Once added, you won't need to enter the passphrase again on this Mac - macOS will automatically unlock the key when needed. **Note:** SSH passphrases are stored in the local keychain and do NOT sync via iCloud. You'll need to add each key to the keychain on each Mac separately.
 
 ### 5) Link Identity to Server
 Creates convenient SSH host aliases. Instead of typing full connection details every time, you can create shortcuts. When you link an identity to a server, sshman adds a Host entry to your synced config:
