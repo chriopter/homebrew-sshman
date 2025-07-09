@@ -104,7 +104,6 @@ That's it! Your SSH keys and host configurations now sync across all your Macs a
 To release: Update VERSION in `sshman` script, commit, and push. CI will auto-update the formula.
 
 Tests run automatically on every push.
-```
 
 ## Caution
 
