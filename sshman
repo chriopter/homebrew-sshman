@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # SSH Key Manager - Simple SSH key management with cloud sync
-VERSION="1.2.0"
+VERSION="1.3.0"
 
 # Color definitions
 RED='\033[0;31m'
@@ -41,7 +41,8 @@ get_sync_dir() {
     if [[ -f "$SSH_CONFIG" ]]; then
         local include_line=$(grep -E "^Include " "$SSH_CONFIG" | head -1)
         if [[ -n "$include_line" ]]; then
-            local sync_config=$(echo "$include_line" | sed 's/^Include //' | sed 's/"//g' | sed "s|^~|$HOME|")
+            # Remove Include prefix, quotes, and handle escaped tildes
+            local sync_config=$(echo "$include_line" | sed 's/^Include //' | sed 's/"//g' | sed 's/\\~/~/g' | sed "s|^~|$HOME|")
             SYNC_DIR=$(dirname "$sync_config")
             return 0
         fi
@@ -165,7 +166,7 @@ install_config() {
     # Create new synced config if needed
     if [[ "$create_new_config" == true ]]; then
         # Convert absolute path to relative path using ~
-        local relative_sync_dir="${SYNC_DIR/#$HOME/\~}"
+        local relative_sync_dir="${SYNC_DIR/#$HOME/~}"
         
         {
             echo "# SSH Key Manager Configuration"
@@ -198,7 +199,7 @@ install_config() {
     # Update local SSH config to only include the synced config
     local temp_config=$(mktemp)
     # Convert absolute path to relative path using ~
-    local relative_sync_dir="${SYNC_DIR/#$HOME/\~}"
+    local relative_sync_dir="${SYNC_DIR/#$HOME/~}"
     local include_line="Include \"$relative_sync_dir/config\""
     
     # Create new local config with just the Include directive
@@ -302,7 +303,9 @@ list_identities() {
     # Touch directory to ensure iCloud files are accessible
     touch "$IDENTITIES_DIR" 2>/dev/null
     
-    print_color $CYAN "📁 $IDENTITIES_DIR"
+    # Display path with ~ for readability
+    local display_path="${IDENTITIES_DIR/#$HOME/~}"
+    print_color $CYAN "📁 $display_path"
     echo
     
     local found=0
@@ -336,7 +339,7 @@ list_identities() {
     done
     
     if [[ $found -eq 0 ]]; then
-        print_color $YELLOW "No identities found in $IDENTITIES_DIR"
+        print_color $YELLOW "No identities found in $display_path"
     fi
 }
 
@@ -470,9 +473,9 @@ link_to_server() {
     read -r host_alias
     [[ -z "$host_alias" ]] && host_alias="$hostname"
     
-    echo -n "Enter username [default: git]: "
+    echo -n "Enter username [default: root]: "
     read -r username
-    [[ -z "$username" ]] && username="git"
+    [[ -z "$username" ]] && username="root"
     
     # Select identity
     echo "Select identity to use:"
@@ -493,7 +496,7 @@ link_to_server() {
     
     # Add to config
     # Convert absolute path to relative path using ~
-    local relative_key_path="${key_path/#$HOME/\~}"
+    local relative_key_path="${key_path/#$HOME/~}"
     
     local config_entry="
 Host $host_alias
