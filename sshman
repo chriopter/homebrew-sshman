@@ -81,7 +81,6 @@ install_config() {
     # Create directories
     print_color $CYAN "Creating directories..."
     mkdir -p "$SYNC_DIR/Identities"
-    touch "$SYNC_DIR/config"
     touch "$SYNC_DIR/known_hosts"
     
     # Create the synced config file with all SSH settings
