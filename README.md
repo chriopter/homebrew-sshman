@@ -2,7 +2,7 @@
 
 sshman provides a nice TUI to register and manage a cloud-synced ssh config & all your identities. Use it to keep SSH-Keys and config in sync across multiple Macs.
 
-- ☁️ **Cloud sync** - Puts Config, Authorized Keys and Identities in Syncing Folder and use on multiple Macs
+- ☁️ **Cloud sync** - Config, Authorized Keys and Identities in Syncing Folder of your choice
 - 🔑 **Keychain integration** - Register Identities in iCloud Keychain your passphrase 
 - 🔐 **Forces encryption** - No accidental unencrypted keys
 - 🖥️ **Server management** - Link SSH keys to specific servers with custom aliases
