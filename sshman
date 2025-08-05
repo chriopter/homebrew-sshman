@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # SSH Key Manager - Simple SSH key management with cloud sync
-VERSION="1.3.1"
+VERSION="1.4.0"
 
 # Color definitions
 RED='\033[0;31m'
@@ -34,6 +34,17 @@ print_header() {
     print_color $BLUE "$1"
     print_color $BLUE "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo
+}
+
+# Log history
+log_history() {
+    local action="$1"
+    
+    # Only log if SYNC_DIR is set
+    if [[ -n "$SYNC_DIR" ]]; then
+        local timestamp=$(date "+%Y-%m-%d %H:%M:%S")
+        echo "$timestamp - $action" >> "$SYNC_DIR/.sshman_history"
+    fi
 }
 
 # Get sync directory from SSH config
@@ -256,6 +267,13 @@ install_config() {
     print_color $CYAN "⚙️  Config: $CONFIG_FILE"
     echo
     
+    # Log the action
+    if [[ "$create_new_config" == true ]]; then
+        log_history "Setup complete"
+    else
+        log_history "Updated configuration"
+    fi
+    
     # Add helpful message for new vs existing setup
     if [[ "$create_new_config" == false ]]; then
         print_color $YELLOW "💡 Using existing synced configuration"
@@ -399,6 +417,9 @@ generate_identity() {
         print_color $GREEN "✓ Key generated successfully and is encrypted!"
         print_color $CYAN "  Private key: $key_path"
         print_color $CYAN "  Public key: ${key_path}.pub"
+        
+        # Log the action
+        log_history "Generated id_${key_type}_${identity_name}"
     else
         print_color $RED "✗ Key is not encrypted! Removing..."
         rm -f "$key_path" "${key_path}.pub"
@@ -447,6 +468,10 @@ add_to_keychain() {
         print_color $GREEN "✓ Successfully added to keychain!"
         print_color $YELLOW "💡 Note: Keychain entries are local to this Mac"
         print_color $YELLOW "   Run this on each Mac where you need the key"
+        
+        # Log the action
+        local identity_name=$(basename "$key_path")
+        log_history "Added $identity_name to keychain"
     else
         print_color $RED "✗ Failed to add to keychain"
         return 1
@@ -509,6 +534,10 @@ Host $host_alias
     
     print_color $GREEN "✓ Successfully linked identity to $host_alias!"
     print_color $CYAN "You can now use: ssh $host_alias"
+    
+    # Log the action
+    local identity_name=$(basename "$key_path")
+    log_history "Linked $identity_name → $username@$hostname"
 }
 
 # Main menu
