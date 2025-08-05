@@ -210,7 +210,7 @@ install_config() {
         echo "# Touch iCloud files before reading to ensure access"
         # For Match exec, we need to use \$HOME which will be expanded at runtime
         local match_sync_dir="${SYNC_DIR/#$HOME/\$HOME}"
-        echo "Match exec \"mkdir -p '$match_sync_dir' '$match_sync_dir/Identities' 2>/dev/null; touch '$match_sync_dir/config' 2>/dev/null; find '$match_sync_dir/Identities' -name 'id_*' -type f -exec touch {} \\; 2>/dev/null; true\""
+        echo "Match exec \"mkdir -p \\\"$match_sync_dir\\\" \\\"$match_sync_dir/Identities\\\" 2>/dev/null; touch \\\"$match_sync_dir/config\\\" 2>/dev/null; find \\\"$match_sync_dir/Identities\\\" -name 'id_*' -type f -exec touch {} \\; 2>/dev/null; true\""
         echo ""
         echo "$include_line"
         echo ""
