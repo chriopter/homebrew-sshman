@@ -7,6 +7,7 @@ sshman provides a nice TUI to register and manage a cloud-synced ssh config & al
 - 🔐 **Forces encryption** - No accidental unencrypted keys
 - 🖥️ **Server management** - Link SSH keys to specific servers with custom aliases
 - 🚀 **Smart iCloud handling** - Automatically ensures iCloud directories are accessible
+- 📝 **History tracking** - Logs all operations to `.sshman_history` in sync folder
 
 ## Quick Start
 
