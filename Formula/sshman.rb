@@ -1,8 +1,8 @@
 class Sshman < Formula
   desc "SSH Key Manager for macOS - Sync & Manage SSH Identities"
   homepage "https://github.com/christophereller/homebrew-sshman"
-  url "https://github.com/chriopter/homebrew-sshman/archive/refs/tags/v1.3.0.tar.gz"
-  sha256 "828d2b817f8be69466e26cb095113be05ade2e942eeda8c7fc7822b30be5c4e1"
+  url "https://github.com/chriopter/homebrew-sshman/archive/refs/tags/v1.3.1.tar.gz"
+  sha256 "8dd351d8d8684aef0472bce390b085daced6dae5af8a5599343adec0ab0e82c5"
   license "MIT"
 
   depends_on :macos
